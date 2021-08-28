@@ -5,9 +5,10 @@ This is basically a diary of getting started with prefect and prefect cloud.
 I skipped over Airflow entirely, but I need to learn something and prefect seems interesting and it works with Dask+Coiled which is really cool. I'm pretty comfortable with python and stuff, but unlike so much else I am learning, I am really starting at 0 here. Cool.
 
 The long term goal is to replace a very strange workflow I have:
-    - A lambda function hits an API once an hour, and stores some documents to mongoDB. Why mongoDB? Because I needed a cheap database that can enforce unique constraints. The API doesn't really have a highwater mark, so need to handle duplicates.
-    - A google cloud function runs one a day, writing new data to bigQuery. Because the implementation was very simple, I don't have a highwater mark here either, and I do some clumsy pandas stuff to avoid inserting duplicates.
-    - A bigquery job is triggered about an hour after that, to calculate some intermediate outputs that is used in a dashboard.
+
+- A lambda function hits an API once an hour, and stores some documents to mongoDB. Why mongoDB? Because I needed a cheap database that can enforce unique constraints. The API doesn't really have a highwater mark, so need to handle duplicates.
+- A google cloud function runs one a day, writing new data to bigQuery. Because the implementation was very simple, I don't have a highwater mark here either, and I do some clumsy pandas stuff to avoid inserting duplicates.
+- A bigquery job is triggered about an hour after that, to calculate some intermediate outputs that is used in a dashboard.
 
 ## Signing up and getting started
 
