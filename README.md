@@ -16,7 +16,7 @@ The long term goal is to replace a very strange workflow I have:
 
 2. Where is my API key? I'm just guessing I need an API key and it turns out I'm right. With Coiled, the first thing you see is an API key and some commands. I don't like having to look for (and even generate) this stuff. Found it though, and created a config file. Cool that it follows a common pattern - I'm used to this from AWS and others.
 
-3. Why is there several similar but different "hello world" examples? It turns out there is a reason, there you need to register a flow and then run it, but I'm new to all this so... Anyways, I figured it out.
+3. Why are there several similar but different "hello world" examples? It turns out there is a reason, you need to register a flow and then run it, but I'm new to all this so... Anyways, I figured it out. Sticking to running from the dashboard from now. The "quick run" button is sweet.
 
 4. Yay I copy-pasted code and it ran! Granted I needed a few tries, but I did something and something happened and there is a green color on the dashboard. Wonder what it was I did though.
 
