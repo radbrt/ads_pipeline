@@ -1,1 +1,1 @@
-prefect
+prefect[all_extras]

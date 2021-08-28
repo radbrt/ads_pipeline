@@ -1,0 +1,9 @@
+name: prefect_pipeline
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - prefect[all_extras]
+  - coiled
+  - boto3
+  - dask
