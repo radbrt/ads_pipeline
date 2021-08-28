@@ -29,7 +29,7 @@ flow.run_config = LocalRun(env={"GREETING": "Hello"})
 
 # Use a `LocalDaskExecutor` to run this flow
 # This will run tasks in a thread pool, allowing for parallel execution
-flow.executor = DaskExecutor(cluster_class=coiled.Cluster)
+flow.executor = DaskExecutor(cluster_class=coiled.Cluster, cluster_kwargs={'software': 'radbrt/prefect_pipeline'})
 
 
 # Register the flow under the "tutorial" project

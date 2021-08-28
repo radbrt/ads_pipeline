@@ -41,3 +41,5 @@ I am able to do a run on coiled by using a DaskExecutor, passing an actual Coile
 I am using a LocalRun run-config for this, and starting a local agent.
 
 This is all simple enough, but I need to register an environment in coiled that has prefect. While that's really a simple task and I have done it a couple of times before, I do it rarely enough to have forgotten each time. This is cool though. Basically it seems to be working I just need to get my ducks in a row.
+
+It's amazing what copy-paste can do. `create_coiled_env.py` will create an env on coiled, using the `environment.yaml` file we have here locally.
