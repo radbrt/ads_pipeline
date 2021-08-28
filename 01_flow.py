@@ -8,7 +8,6 @@ from prefect import task, Flow, Parameter
 from prefect.executors import LocalExecutor
 from prefect.run_configs import LocalRun
 from datetime import datetime
-import coiled
 
 
 @task
