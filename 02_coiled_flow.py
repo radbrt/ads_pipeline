@@ -7,16 +7,20 @@ from prefect.executors import DaskExecutor
 from prefect.run_configs import LocalRun
 from datetime import datetime
 import coiled
+import boto3
 
 
 @task
 def say_hello(name):
     # Add a sleep to simulate some long-running task
-    time.sleep(10)
+    bucket = boto3.client('s3')
+    buckets = bucket.list_buckets()
+    time.sleep(1)
     # Load the greeting to use from an environment variable
     greeting = os.environ.get("GREETING")
     logger = prefect.context.get("logger")
-    logger.info(f"{greeting}, {name}!")
+    logger.info(f"{greeting}, dear {name}")
+    logger.info(buckets)
     logger.info(f"Running at {datetime.now()}")
 
 
@@ -24,8 +28,10 @@ with Flow("hello-flow") as flow:
     people = Parameter("people", default=["Arthur", "Ford", "Marvin"])
     say_hello.map(people)
 
+
 # Configure the `GREETING` environment variable for this flow
 flow.run_config = LocalRun(env={"GREETING": "Hello"})
+
 
 # Use a `LocalDaskExecutor` to run this flow
 # This will run tasks in a thread pool, allowing for parallel execution

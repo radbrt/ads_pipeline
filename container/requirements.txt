@@ -1,0 +1,7 @@
+pip
+prefect
+coiled
+boto3
+dask
+pandas
+pandas-gbq>=0.12

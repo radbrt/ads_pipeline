@@ -1,2 +1,4 @@
 .idea
 _*
+prod
+gcp_keys.json

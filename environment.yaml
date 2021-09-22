@@ -3,7 +3,11 @@ channels:
   - defaults
   - conda-forge
 dependencies:
-  - prefect[all_extras]
+  - pip
+  - prefect
   - coiled
   - boto3
   - dask
+  - pandas
+  - pip:
+    - pandas-gbq>=0.12
