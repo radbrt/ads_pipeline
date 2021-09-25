@@ -114,8 +114,8 @@ def fetch_single_page(page, endpoint, header, args):
     if 1 == 1: #r.status_code == 200:
         #ads = json.loads(r.text)
         save_ad_page(ad_list).run()
-    else:
-        print('Non-200 return code')
+    # else:
+    #     print('Non-200 return code')
 
     return request_string
 
@@ -152,7 +152,7 @@ with Flow("fetch_ads") as flow:
 
         if max_page > 1:
             pages = range(1, max_page)
-            fetch_single_page.map(pages, task_args={'endpoint': ENDPOINT, 'header': HEADERS, 'args': args})
+            fetch_single_page.map(pages, endpoint=ENDPOINT, header=HEADERS, args=args)
 
 
     else:
