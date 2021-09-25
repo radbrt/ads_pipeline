@@ -102,6 +102,7 @@ def register_time(runtime):
 
 
 with Flow("fetch_ads") as flow:
+    logger.info(f"init")
     last_run = prefect.backend.kv_store.get_key_value('last_ads_run')['last_run']
     last_run_ts = datetime.fromisoformat(last_run)
     start_isotime = last_run_ts.replace(tzinfo=None).isoformat(timespec='seconds')
