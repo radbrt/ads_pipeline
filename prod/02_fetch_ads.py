@@ -53,9 +53,16 @@ def insert_ads(adsarray, db_table):
 
 
 
+def check_key(fileloc):
+    keyfile = Path(fileloc)
+    if not keyfile.is_file():
+        t = get_secret("gbq_accesskey")
+        with open(fileloc, 'w') as f:
+            f.write(t)
 
 @task
 def save_ad_page(ad_list):
+    check_key("bq_secret.json")
     df = pd.DataFrame(ad_list.get('content'))
     cred = service_account.Credentials.from_service_account_file("bq_secret.json")
     df.to_gbq("radjobads.radjobads.wrk_job_ads", "radjobads", if_exists='append', credentials=cred)
