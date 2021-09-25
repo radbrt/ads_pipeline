@@ -129,10 +129,6 @@ with Flow("fetch_ads") as flow:
     with open('bq_secret.json', 'w') as f:
         f.write(t)
 
-
-
-    #last_run = datetime.today() - timedelta(hours=1, minutes=15)
-    #start_isotime = last_run.isoformat(timespec='seconds')
     last_run = prefect.backend.kv_store.get_key_value('last_ads_run')['last_run']
     last_run_ts = datetime.fromisoformat(last_run)
     start_isotime = last_run_ts.isoformat(timespec='seconds')
@@ -147,7 +143,12 @@ with Flow("fetch_ads") as flow:
     current_page = 0
 
     r = requests.get(f"{ENDPOINT}?{args}&page={current_page}", headers=HEADERS)
-    ads = json.loads(r.text)
+
+    if r.status_code == 200:
+        ads = json.loads(r.text)
+        save_ad_page(ads).run()
+    else:
+        print('Non-200 return code')
 
     # attempts, errors = insert_ads(ads['content'], jobs_db.ads)
     # print(f"Page {current_page}, Attempts: {attempts}, Errors: {len(errors)}")
