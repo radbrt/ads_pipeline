@@ -146,7 +146,7 @@ with Flow("fetch_ads") as flow:
 
     if r.status_code == 200:
         ads = json.loads(r.text)
-        save_ad_page(ads).run()
+        save_ad_page.run(ads)
 
         max_page = ads.get('totalPages') + 1 or 0
 
