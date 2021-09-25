@@ -112,7 +112,7 @@ with Flow("fetch_ads") as flow:
     current_time_string = current_time.replace(tzinfo=None).isoformat(timespec='seconds')
     logger.info(f"Ending at timestamp {current_time_string}")
 
-    start_fetching.run(start_isotime, current_time_string)
+    start_fetching(start_isotime, current_time_string)
 
     register_time(current_time)
 
