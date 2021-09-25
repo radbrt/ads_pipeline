@@ -43,3 +43,12 @@ I am using a LocalRun run-config for this, and starting a local agent.
 This is all simple enough, but I need to register an environment in coiled that has prefect. While that's really a simple task and I have done it a couple of times before, I do it rarely enough to have forgotten each time. This is cool though. Basically it seems to be working I just need to get my ducks in a row.
 
 It's amazing what copy-paste can do. `create_coiled_env.py` will create an env on coiled, using the `environment.yaml` file we have here locally.
+
+
+## Round 2
+
+Azure didn't work out very well as a agent host (some finnicking I didn't want to spend time on), so I'm back on AWS. Still using coiled to do all the heavy lifting though.
+
+One problem I faced was that I'm using bigquery, which needs a json key file for authentication. Since I'm running on coiled i needed to get the keyfile to the servers, which is normally handeled by the `client.upload_file("my_script.py")` method, but since I'm launching the entire thing into coiled I don't have access to the `client` object. There are a number of solutions, the one I went with was to store the key-file as a json object in the AWS secrets manager.
+
+
