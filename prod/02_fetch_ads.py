@@ -14,7 +14,7 @@ import base64
 from botocore.exceptions import ClientError
 import pandas as pd
 from google.oauth2 import service_account
-
+from pathlib import Path
 
 def get_secret(secret_name, region_name="eu-central-1"):
     # Create a Secrets Manager client
