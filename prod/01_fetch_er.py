@@ -57,7 +57,7 @@ def process_single_file(url):
     filename = save_file_to_s3(url['entity'], url['url'])
     read_file_to_bq(url['entity'], filename)
 
-with Flow("hello-flow") as flow:
+with Flow("fetch_er") as flow:
 
     urls = Parameter("urls", default=[
         {'entity': 'foretak',
@@ -65,7 +65,6 @@ with Flow("hello-flow") as flow:
         {'entity': 'virksomheter',
          'url': "https://data.brreg.no/enhetsregisteret/api/underenheter/lastned"}
     ])
-
 
     process_single_file.map(urls)
 

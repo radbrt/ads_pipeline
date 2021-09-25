@@ -9,5 +9,6 @@ dependencies:
   - boto3
   - dask
   - pandas
+  - pymongo
   - pip:
     - pandas-gbq>=0.12
