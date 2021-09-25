@@ -134,7 +134,7 @@ with Flow("fetch_ads") as flow:
     #last_run = datetime.today() - timedelta(hours=1, minutes=15)
     #start_isotime = last_run.isoformat(timespec='seconds')
     last_run = prefect.backend.kv_store.get_key_value('last_ads_run')['last_run']
-    last_run_ts = datetime.fromisoformat(last_run_ts)
+    last_run_ts = datetime.fromisoformat(last_run)
     start_isotime = last_run_ts.isoformat(timespec='seconds')
     endtime = "*"
 
