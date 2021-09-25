@@ -1,5 +1,5 @@
 import urllib3
-from prefect import task, Flow, Parameter
+from prefect import task, Flow, unmapped
 from prefect.executors import DaskExecutor
 from prefect.run_configs import LocalRun
 import prefect
@@ -152,7 +152,7 @@ with Flow("fetch_ads") as flow:
 
         if max_page > 1:
             pages = range(1, max_page)
-            fetch_single_page.map(pages, endpoint=ENDPOINT, header=HEADERS, args=args)
+            fetch_single_page.map(pages, endpoint=unmapped(ENDPOINT), header=unmapped(HEADERS), args=unmapped(args))
 
 
     else:
