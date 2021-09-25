@@ -147,16 +147,19 @@ with Flow("fetch_ads") as flow:
     if r.status_code == 200:
         ads = json.loads(r.text)
         save_ad_page(ads).run()
+
+        max_page = ads.get('totalPages') + 1 or 0
+
+        if max_page > 1:
+            pages = range(1, max_page)
+            fetch_single_page.map(pages, task_args={'endpoint': ENDPOINT, 'header': HEADERS, 'args': args})
+
+
     else:
         print('Non-200 return code')
 
     # attempts, errors = insert_ads(ads['content'], jobs_db.ads)
     # print(f"Page {current_page}, Attempts: {attempts}, Errors: {len(errors)}")
-    max_page = ads.get('totalPages') + 1 or 0
-
-    if max_page > 1:
-        pages = range(1, max_page)
-        fetch_single_page.map(pages, task_args={'endpoint': ENDPOINT, 'header': HEADERS, 'args': args})
 
     # while current_page <= max_page:
     #     time.sleep(5)
