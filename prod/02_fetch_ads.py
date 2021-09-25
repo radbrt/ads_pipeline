@@ -60,7 +60,6 @@ def save_ad_page(ad_list):
     cred = service_account.Credentials.from_service_account_file("bq_secret.json")
     df.to_gbq("radjobads.radjobads.wrk_job_ads", "radjobads", if_exists='append', credentials=cred)
 
-
 @task
 def fetch_single_page(page, endpoint, header, args):
     time.sleep(1)
@@ -87,9 +86,9 @@ def fetch_single_page(page, endpoint, header, args):
                 "workLocations": [{"municipal": "BERGEN"}],
                 "title": "Vi søker en flink vernepleier",
                 "description": " schnell",
-                "sourceurl": null,
+                "sourceurl": "null",
                 "source": "XML_STILLING",
-                "applicationUrl": null,
+                "applicationUrl": "null",
                 "applicationDue": "2021-10-09T00:00",
                 "occupationCategories": [
                     {
@@ -97,14 +96,14 @@ def fetch_single_page(page, endpoint, header, args):
                         "level2": "Helse"
                     }
                 ],
-                "jobtitle": null,
+                "jobtitle": "null",
                 "link": "https://arbeidsplassen.nav.no/stillinger/stilling/e3c9d2df-fdc6-41f4-bd2a-e235e75e493f",
                 "employer": {
                     "name": "Dagtjenester for utviklingshemmede, Bergen kommune",
                 },
                 "engagementtype": "Fast",
                 "extent": "Heltid",
-                "starttime": null,
+                "starttime": "null",
                 "positioncount": "1",
                 "sector": "Offentlig"
             }
@@ -113,7 +112,7 @@ def fetch_single_page(page, endpoint, header, args):
 
     if 1 == 1: #r.status_code == 200:
         #ads = json.loads(r.text)
-        save_ad_page(ad_list).run()
+        save_ad_page.run(ad_list)
     # else:
     #     print('Non-200 return code')
 
@@ -172,8 +171,13 @@ with Flow("fetch_ads") as flow:
     #     else:
     #         print('Non-200 return code')
 
-flow.run_config = LocalRun()
-flow.executor = DaskExecutor(cluster_class=coiled.Cluster,
-                             cluster_kwargs={'software': 'radbrt/prefect_pipeline', 'n_workers': 2,
-                                             'worker_memory': "14 GiB"})
-flow.register(project_name="er_pipe_load")
+# flow.run_config = LocalRun()
+#
+#
+# flow.executor = DaskExecutor(cluster_class=coiled.Cluster,
+#                              cluster_kwargs={'software': 'radbrt/prefect_pipeline', 'n_workers': 2,
+#                                              'worker_memory': "14 GiB"})
+# flow.register(project_name="er_pipe_load")
+
+
+flow.run()
