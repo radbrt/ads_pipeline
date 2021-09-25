@@ -51,4 +51,7 @@ Azure didn't work out very well as a agent host (some finnicking I didn't want t
 
 One problem I faced was that I'm using bigquery, which needs a json key file for authentication. Since I'm running on coiled i needed to get the keyfile to the servers, which is normally handeled by the `client.upload_file("my_script.py")` method, but since I'm launching the entire thing into coiled I don't have access to the `client` object. There are a number of solutions, the one I went with was to store the key-file as a json object in the AWS secrets manager.
 
+Some tips so far:
+1. debug locally using the flow.run() command rather than registering the flow and running. At some point you have to register and debug the entire run, but because we are invoking coiled the way we do we can simply change the flow run configurations and run locally instead.
 
+2. Everything inside the `with Flow(...) as flow:` statement except the task function calls is run when registering the function, so make sure the stuff in the flow is quick, easy and harmless to run. Among other things, it forced me to create a mini-task simply for updating a key-vault timestamp (high water mark) so that I wouldn't ruin state simply by registering the function.
