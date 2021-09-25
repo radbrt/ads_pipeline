@@ -110,13 +110,13 @@ with Flow("fetch_ads") as flow:
     logger.info(f"starting at timestamp {start_isotime}")
     current_time_string = current_time.replace(tzinfo=None).isoformat(timespec='seconds')
     logger.info(f"Ending at timestamp {current_time_string}")
-    start_fetching(start_isotime, current_time_string)
+
+    start_fetching.run(start_isotime, current_time_string)
 
     register_time(current_time)
 
 
 flow.run_config = LocalRun()
-
 flow.executor = DaskExecutor(cluster_class=coiled.Cluster,
                              cluster_kwargs={'software': 'radbrt/prefect_pipeline', 'n_workers': 2,
                                              'worker_memory': "14 GiB"})
