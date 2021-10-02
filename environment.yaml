@@ -4,7 +4,7 @@ channels:
   - conda-forge
 dependencies:
   - pip
-  - prefect
+  - prefect[aws, viz]
   - coiled
   - boto3
   - dask

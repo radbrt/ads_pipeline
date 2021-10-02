@@ -1,3 +1,4 @@
 .idea
 _*
 gcp_keys.json
+*.json

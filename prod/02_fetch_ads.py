@@ -121,7 +121,7 @@ flow.run_config = LocalRun()
 flow.executor = DaskExecutor(cluster_class=coiled.Cluster,
                              cluster_kwargs={'software': 'radbrt/prefect_pipeline', 'n_workers': 2,
                                              'worker_memory': "14 GiB"})
-flow.register(project_name="er_pipe_load")
+flow.register(project_name="er_pipe_load", set_schedule_active=False)
 
 
 # flow.run()
