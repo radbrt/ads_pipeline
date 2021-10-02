@@ -10,8 +10,8 @@ with Flow(name="dbt_flow") as f:
     )(command='dbt run')
 
 
-flow.run_config = LocalRun()
+f.run_config = LocalRun()
 
-flow.executor = LocalExecutor()
+f.executor = LocalExecutor()
 
-flow.register(project_name="er_pipe_load", set_schedule_active=False)
+f.register(project_name="er_pipe_load", set_schedule_active=False)
