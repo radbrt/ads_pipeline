@@ -5,7 +5,8 @@ from prefect.tasks.dbt import DbtShellTask
 
 with Flow(name="dbt_flow") as f:
     task = DbtShellTask(
-        profiles_dir='/home/ec2-user/.dbt/'
+        profiles_dir='/home/ec2-user/.dbt/',
+        helper_script='cd /home/ec2-user/prefect_pipeline/etl/prefect_er'
     )(command='dbt run')
 
 
