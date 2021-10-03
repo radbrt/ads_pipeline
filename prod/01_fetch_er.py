@@ -27,6 +27,12 @@ def get_secret(secret_name):
         return get_secret_value_response['SecretString']
 
 
+def check_key(fileloc):
+    keyfile = Path(fileloc)
+    if not keyfile.is_file():
+        t = get_secret("gbq_accesskey")
+        with open(fileloc, 'w') as f:
+            f.write(t)
 
 
 def save_file_to_s3(prefix, url):
@@ -42,10 +48,7 @@ def save_file_to_s3(prefix, url):
 
 
 def read_file_to_bq(prefix, filename):
-
-    t = get_secret("gbq_accesskey")
-    with open('bq_secret.json', 'w') as f:
-        f.write(t)
+    check_key("bq_secret.json")
 
     cred = service_account.Credentials.from_service_account_file("bq_secret.json")
     df = pd.read_json(f"s3://radallelse/enhetsregisteret/{prefix}/{filename}", compression='gzip', orient='record',
@@ -54,7 +57,7 @@ def read_file_to_bq(prefix, filename):
     df.to_gbq(f"radjobads.radjobads.load_{prefix}", "radjobads", if_exists='replace', credentials=cred)
 
 
-@task
+@task(max_retries=3, retry_delay=datetime.timedelta(minutes=5))
 def process_single_file(url):
     filename = save_file_to_s3(url['entity'], url['url'])
     read_file_to_bq(url['entity'], filename)
