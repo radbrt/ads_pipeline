@@ -93,7 +93,7 @@ def start_fetching(start_isotime, end_isotime):
     logger.info(saveresult)
 
     if total_pages > 1:
-        for page in range(1, total_pages + 1)[:3]:
+        for page in range(1, total_pages + 1):
             fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args)
 
 
