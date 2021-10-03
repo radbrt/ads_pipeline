@@ -1,6 +1,7 @@
 import urllib3
 from prefect import task, Flow, unmapped
 from prefect.executors import DaskExecutor
+from prefect.executors import LocalExecutor
 from prefect.run_configs import LocalRun
 import prefect
 import coiled
@@ -89,12 +90,12 @@ def start_fetching(start_isotime, end_isotime):
     total_pages = ads['totalPages']
     logger.info(f"Total pages: {total_pages}")
 
-    saveresult = save_ad_page.run(ads)
-    logger.info(saveresult)
-
-    if total_pages > 1:
-        for page in range(1, total_pages + 1):
-            fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args)
+    # saveresult = save_ad_page.run(ads)
+    # logger.info(f"Saveresult: {saveresult}")
+    #
+    # if total_pages > 1:
+    #     for page in range(1, total_pages + 1):
+    #         fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args)
 
 
 @task()
@@ -120,10 +121,13 @@ with Flow("fetch_ads") as flow:
 
 
 flow.run_config = LocalRun()
-flow.executor = DaskExecutor(cluster_class=coiled.Cluster,
-                             cluster_kwargs={'software': 'radbrt/prefect_pipeline', 'n_workers': 1,
-                                             'worker_memory': "14 GiB"})
-flow.register(project_name="er_pipe_load", set_schedule_active=False)
 
+flow.executor = LocalExecutor()
+
+# flow.executor = DaskExecutor(cluster_class=coiled.Cluster,
+#                              cluster_kwargs={'software': 'radbrt/prefect_pipeline', 'n_workers': 1,
+#                                              'worker_memory': "14 GiB"})
+
+flow.register(project_name="er_pipe_load", set_schedule_active=False)
 
 # flow.run()
