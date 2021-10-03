@@ -49,9 +49,10 @@ def check_key(fileloc):
         with open(fileloc, 'w') as f:
             f.write(t)
 
-@task
+@task()
 def save_ad_page(ad_list):
     check_key("bq_secret.json")
+    logger.info(f"Saving: {len(ad_list)} pages")
     df = pd.DataFrame(ad_list.get('content'))
     cred = service_account.Credentials.from_service_account_file("bq_secret.json")
     df.to_gbq("radjobads.radjobads.wrk_job_ads", "radjobads", if_exists='append', credentials=cred)
@@ -62,7 +63,7 @@ def fetch_single_page(page, endpoint, header, args):
     time.sleep(1)
     request_string = f"{endpoint}?{args}&page={page}"
     r = requests.get(request_string, headers=header)
-
+    logger.info(f"Fetched page number {page}")
     assert r.status_code == 200
 
     ads = json.loads(r.text)
@@ -91,11 +92,12 @@ def start_fetching(start_isotime, end_isotime):
     logger.info(f"Total pages: {total_pages}")
 
     if total_pages > 1:
-        pages = range(1, total_pages + 1)
+        pages = list(range(1, total_pages + 1))
+        logger.info(f"pages: {pages}")
         fetch_single_page.map(pages, endpoint=unmapped(ENDPOINT), header=unmapped(HEADERS), args=unmapped(args))
 
 
-@task
+@task()
 def register_time(runtime):
     runtime_iso = runtime.isoformat()
     prefect.backend.kv_store.set_key_value('last_ads_run', {'last_run': runtime_iso})
