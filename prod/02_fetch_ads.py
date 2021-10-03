@@ -50,8 +50,9 @@ def check_key(fileloc):
 
 @task()
 def save_ad_page(ad_list):
-    check_key("bq_secret.json")
     logger.info(f"Saving: {len(ad_list)} pages")
+    check_key("bq_secret.json")
+
     df = pd.DataFrame(ad_list.get('content'))
     cred = service_account.Credentials.from_service_account_file("bq_secret.json")
     df.to_gbq("radjobads.radjobads.wrk_job_ads", "radjobads", if_exists='append', credentials=cred)
@@ -65,7 +66,7 @@ def fetch_single_page(page, endpoint, header, args):
     logger.info(f"Fetched page number {page}")
     assert webrequest.status_code == 200
 
-    ads_page = json.loads(r.text)
+    ads_page = json.loads(webrequest.text)
     save_ad_page.run(ads_page)
 
     return request_string
@@ -92,7 +93,7 @@ def start_fetching(start_isotime, end_isotime):
     logger.info(saveresult)
 
     if total_pages > 1:
-        for page in range(1, total_pages + 1):
+        for page in range(1, total_pages + 1)[:3]:
             fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args)
 
 
