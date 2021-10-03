@@ -62,12 +62,12 @@ def save_ad_page(ad_list):
 def fetch_single_page(page, endpoint, header, args):
     time.sleep(1)
     request_string = f"{endpoint}?{args}&page={page}"
-    r = requests.get(request_string, headers=header)
+    webrequest = requests.get(request_string, headers=header)
     logger.info(f"Fetched page number {page}")
-    assert r.status_code == 200
+    assert webrequest.status_code == 200
 
-    ads = json.loads(r.text)
-    save_ad_page.run(ads)
+    ads_page = json.loads(r.text)
+    save_ad_page.run(ads_page)
 
     return request_string
 
@@ -93,7 +93,7 @@ def start_fetching(start_isotime, end_isotime):
 
     if total_pages > 1:
         for page in range(1, total_pages + 1):
-            fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args)
+            fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args).run()
 
 
 @task()
