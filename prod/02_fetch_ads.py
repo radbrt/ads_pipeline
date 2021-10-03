@@ -5,6 +5,7 @@ from prefect.executors import LocalExecutor
 from prefect.run_configs import LocalRun
 import prefect
 import coiled
+from coiled import Cluster
 import boto3
 import time
 import json
@@ -12,7 +13,8 @@ import requests
 from datetime import datetime, timedelta
 import base64
 from botocore.exceptions import ClientError
-import pandas as pd
+from dask.dataframe import dd
+from dask.distributed import Client
 from google.oauth2 import service_account
 from pathlib import Path
 import pytz
@@ -51,15 +53,21 @@ def check_key(fileloc):
 
 @task()
 def save_ad_page(ad_list):
-    logger.info(f"Saving: {len(ad_list)} pages")
+    cluster = coiled.Cluster(n_workers=1, name="prefect_ads_processing",
+                             software="radbrt/prefect_pipeline",
+                             worker_memory="14 GiB")
+    client = Client(cluster)
+    print("Dashboard:", client.dashboard_link)
+
+    logger.info(f"Saving: {len(ad_list['content'])} pages")
     check_key("bq_secret.json")
 
-    df = pd.DataFrame(ad_list.get('content'))
+    df = dd.DataFrame(ad_list['content'])
     cred = service_account.Credentials.from_service_account_file("bq_secret.json")
     df.to_gbq("radjobads.radjobads.wrk_job_ads", "radjobads", if_exists='append', credentials=cred)
 
 
-
+@task(max_retries=3, retry_delay=timedelta(minutes=5))
 def fetch_single_page(page, endpoint, header, args):
     time.sleep(1)
     request_string = f"{endpoint}?{args}&page={page}"
@@ -90,12 +98,12 @@ def start_fetching(start_isotime, end_isotime):
     total_pages = ads['totalPages']
     logger.info(f"Total pages: {total_pages}")
 
-    # saveresult = save_ad_page.run(ads)
-    # logger.info(f"Saveresult: {saveresult}")
-    #
-    # if total_pages > 1:
-    #     for page in range(1, total_pages + 1):
-    #         fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args)
+    saveresult = save_ad_page.run(ads)
+    logger.info(f"Saveresult: {saveresult}")
+
+    if total_pages > 1:
+        for page in range(1, total_pages + 1):
+            fetch_single_page.run(page, endpoint=ENDPOINT, header=HEADERS, args=args)
 
 
 @task()
