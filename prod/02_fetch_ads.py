@@ -57,7 +57,7 @@ def save_ad_page(ad_list):
     df.to_gbq("radjobads.radjobads.wrk_job_ads", "radjobads", if_exists='append', credentials=cred)
 
 
-@task(max_retries=3, retry_delay=timedelta(minutes=2))
+
 def fetch_single_page(page, endpoint, header, args):
     time.sleep(1)
     request_string = f"{endpoint}?{args}&page={page}"
@@ -92,7 +92,7 @@ def start_fetching(start_isotime, end_isotime):
 
     if total_pages > 1:
         for page in range(1, total_pages + 1):
-            fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args).run()
+            fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args)
 
 
 @task()
