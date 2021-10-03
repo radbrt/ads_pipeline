@@ -5,7 +5,6 @@ from prefect.run_configs import LocalRun
 import prefect
 import coiled
 import boto3
-# import pymongo
 import time
 import json
 import requests
