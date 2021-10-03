@@ -85,10 +85,11 @@ def start_fetching(start_isotime, end_isotime):
     assert r.status_code == 200
 
     ads = json.loads(r.text)
-    save_ad_page.run(ads)
-
-    total_pages = ads.get('totalPages') or 0
+    total_pages = ads['totalPages']
     logger.info(f"Total pages: {total_pages}")
+
+    saveresult = save_ad_page.run(ads)
+    logger.info(saveresult)
 
     if total_pages > 1:
         for page in range(1, total_pages + 1):
