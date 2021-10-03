@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 import base64
 from botocore.exceptions import ClientError
 import dask.dataframe as dd
+import pandas as pd
 from dask.distributed import Client
 from google.oauth2 import service_account
 from pathlib import Path
@@ -53,16 +54,16 @@ def check_key(fileloc):
 
 @task()
 def save_ad_page(ad_list):
-    cluster = coiled.Cluster(n_workers=1, name="prefect_ads_processing",
-                             software="radbrt/prefect_pipeline",
-                             worker_memory="14 GiB")
-    client = Client(cluster)
-    print("Dashboard:", client.dashboard_link)
+    # cluster = coiled.Cluster(n_workers=1, name="prefect_ads_processing",
+    #                          software="radbrt/prefect_pipeline",
+    #                          worker_memory="14 GiB")
+    # client = Client(cluster)
+    # print("Dashboard:", client.dashboard_link)
 
     logger.info(f"Saving: {len(ad_list['content'])} pages")
     check_key("bq_secret.json")
 
-    df = dd.DataFrame(ad_list['content'])
+    df = pd.DataFrame(ad_list['content'])
     cred = service_account.Credentials.from_service_account_file("bq_secret.json")
     df.to_gbq("radjobads.radjobads.wrk_job_ads", "radjobads", if_exists='append', credentials=cred)
 
@@ -97,6 +98,7 @@ def start_fetching(start_isotime, end_isotime):
     ads = json.loads(r.text)
     total_pages = ads['totalPages']
     logger.info(f"Total pages: {total_pages}")
+    logger.info(f"total elements")
 
     saveresult = save_ad_page.run(ads)
     logger.info(f"Saveresult: {saveresult}")
