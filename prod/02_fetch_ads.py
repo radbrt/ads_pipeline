@@ -92,9 +92,8 @@ def start_fetching(start_isotime, end_isotime):
     logger.info(f"Total pages: {total_pages}")
 
     if total_pages > 1:
-        pages = list(range(1, total_pages + 1))
-        logger.info(f"pages: {pages}")
-        fetch_single_page.map(pages, endpoint=unmapped(ENDPOINT), header=unmapped(HEADERS), args=unmapped(args))
+        for page in range(1, total_pages + 1):
+            fetch_single_page(page, endpoint=ENDPOINT, header=HEADERS, args=args)
 
 
 @task()
