@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import urllib3
 from prefect import task, Flow, Parameter
 from prefect.executors import DaskExecutor
