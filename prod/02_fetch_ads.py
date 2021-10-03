@@ -13,7 +13,7 @@ import requests
 from datetime import datetime, timedelta
 import base64
 from botocore.exceptions import ClientError
-from dask.dataframe import dd
+import dask.dataframe as dd
 from dask.distributed import Client
 from google.oauth2 import service_account
 from pathlib import Path
