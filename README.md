@@ -55,3 +55,12 @@ Some tips so far:
 1. debug locally using the flow.run() command rather than registering the flow and running. At some point you have to register and debug the entire run, but because we are invoking coiled the way we do we can simply change the flow run configurations and run locally instead.
 
 2. Everything inside the `with Flow(...) as flow:` statement except the task function calls is run when registering the function, so make sure the stuff in the flow is quick, easy and harmless to run. Among other things, it forced me to create a mini-task simply for updating a key-vault timestamp (high water mark) so that I wouldn't ruin state simply by registering the function.
+
+
+## Round 3
+
+Two major things:
+
+1. dbt runs work great. No problems so far. A little strange to set up with a combined dbt+prefect project, but works nicely. It does clash with coiled though, because it basically just calls some local files. Don't need that parallelized, and don't want to upload and set up the entire dbt project on the cluster. Which brings me to part two...
+
+2. Flow of flows. Basically you can make a flow that runs other flows. And presumably, this stacks (because we would really want to loose our sanity). Like, seriously, you could probably do some mad programming with this. Like create a flow that processes a file with coiled, and another flow that picks up files from a bucket and calls the file-load flow for each file. Haven't tried it though, but I have confirmed that a basic flow-of-flows works nicely.
