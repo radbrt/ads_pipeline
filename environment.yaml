@@ -12,3 +12,4 @@ dependencies:
   - pymongo
   - pip:
     - pandas-gbq>=0.12
+    - paramiko

@@ -2,3 +2,4 @@
 _*
 gcp_keys.json
 *.json
+.env
